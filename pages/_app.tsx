@@ -1,15 +1,21 @@
-import '../styles/globals.css'
-import DefaultLayout from '../layouts/DefaultLayout'
+import "../styles/globals.css";
+import DefaultLayout from "../layouts/DefaultLayout";
 
 // Import FCL config
-import '../config/fcl'
+import "../config/fcl";
+import { FlowProvider } from "../contexts/FlowContext";
 
 function MyApp({ Component, pageProps }) {
-  return (
-    <DefaultLayout>
-      <Component {...pageProps} />
-    </DefaultLayout>
-  )
+  const getLayout = Component.getLayout ?? defaultPageLayout;
+  return getLayout(<Component {...pageProps} />);
 }
 
-export default MyApp
+function defaultPageLayout(page) {
+  return (
+    <FlowProvider>
+      <DefaultLayout>{page}</DefaultLayout>
+    </FlowProvider>
+  );
+}
+
+export default MyApp;

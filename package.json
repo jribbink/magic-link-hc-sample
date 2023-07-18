@@ -21,11 +21,16 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@onflow/fcl": "1.4.1",
+    "@magic-ext/flow": "^13.5.0",
+    "@magic-ext/oauth": "^12.4.1",
+    "@magic-sdk/provider": "^18.4.1",
+    "@onflow/fcl": "^1.5.0-alpha.3",
     "@onflow/typedefs": "1.1.0",
+    "magic-sdk": "^18.4.1",
     "next": "13.0.0",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "swr": "^2.2.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -38,5 +43,10 @@
     "jest-environment-jsdom": "^29.3.1",
     "raw-loader": "^4.0.2",
     "wait-on": "^7.0.1"
+  },
+  "overrides": {
+    "@magic-ext/flow": {
+      "@onflow/fcl": "^1.5.0-alpha.3"
+    }
   }
 }
