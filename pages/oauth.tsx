@@ -1,56 +1,64 @@
 import { useEffect, useState } from "react";
-import { FlowProvider, useFlow } from "../contexts/FlowContext";
-import setupOwnedAccount from "../cadence/transactions/hybrid-custody/setup-owned-account.cdc";
+import { useFlow } from "../contexts/FlowContext";
 import * as fcl from "@onflow/fcl";
+import { useRouter } from "next/router";
+
+import setupOwnedAccount from "../cadence/transactions/hybrid-custody/setup-owned-account.cdc";
+import setupExampleNFTCollection from "../cadence/transactions/example-nft/setup.cdc";
+import { Heading } from "@chakra-ui/react";
 
 function OAuthPage() {
-  return (
-    <FlowProvider>
-      <OAuthConsumer />
-    </FlowProvider>
-  );
-}
-
-function OAuthConsumer() {
+  const router = useRouter();
   const flow = useFlow();
-  const [isSettingUp, setIsSettingUp] = useState(false);
+  const [message, setMessage] = useState("Logging in with Magic...");
 
   useEffect(() => {
     if (!flow.magic) return;
     flow.magic.oauth
       .getRedirectResult()
-      .catch(() => {})
       .then(async () => {
         // TODO: only do this first setup if the account doesn't exist
-        await fcl
+        setMessage("Setting up your account...");
+
+        const nftSetupResult = await fcl
+          .mutate({
+            cadence: setupExampleNFTCollection,
+            limit: 9999,
+            authz: flow.authz,
+          } as any)
+          .then((txId) => fcl.tx(txId).onceSealed());
+
+        if (nftSetupResult.errorMessage) {
+          throw new Error(nftSetupResult.errorMessage);
+        }
+
+        const ownedAccountSetupResult = await fcl
           .mutate({
             cadence: setupOwnedAccount,
             limit: 9999,
             authz: flow.authz,
           } as any)
-          .then((res) => {
-            setIsSettingUp(true);
-            return fcl.tx(res).onceSealed;
-          });
+          .then((txId) => fcl.tx(txId).onceSealed());
 
-        window.location.replace("/");
+        if (ownedAccountSetupResult.errorMessage) {
+          throw new Error(ownedAccountSetupResult.errorMessage);
+        }
+
+        router.replace("/");
+      })
+      .catch(() => {
+        setMessage("An error has occurred");
       });
-  }, [flow.magic, flow.authz]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [flow.magic]);
+
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <div style={{ marginLeft: "auto", marginRight: "auto" }}>
-        {isSettingUp ? (
-          <h1>Setting up your account...</h1>
-        ) : (
-          <h1>Logging in...</h1>
-        )}
+        <Heading>{message}</Heading>
       </div>
     </div>
   );
 }
-
-OAuthPage.getLayout = function getLayout(page) {
-  return page;
-};
 
 export default OAuthPage;

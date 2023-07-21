@@ -1,14 +1,7 @@
 {
   "contracts": {
-    "HelloWorld": "cadence/contracts/HelloWorld.cdc",
     "CapabilityDelegator": {
       "source": "cadence/contracts/hybrid-custody/CapabilityDelegator.cdc",
-      "aliases": {
-        "testnet": "294e44e1ec6993c6"
-      }
-    },
-    "HybridCustody": {
-      "source": "cadence/contracts/hybrid-custody/HybridCustody.cdc",
       "aliases": {
         "testnet": "294e44e1ec6993c6"
       }
@@ -25,6 +18,51 @@
         "testnet": "294e44e1ec6993c6"
       }
     },
+    "ExampleNFT": "./cadence/contracts/example-nft/ExampleNFT.cdc",
+    "ExampleNFTCollectionFactory": "./cadence/contracts/example-nft/factories/ExampleNFTCollectionFactory.cdc",
+    "FTAllFactory": {
+      "source": "cadence/contracts/hybrid-custody/factories/FTAllFactory.cdc",
+      "aliases": {
+        "testnet": "294e44e1ec6993c6"
+      }
+    },
+    "FTProviderFactory": {
+      "source": "cadence/contracts/hybrid-custody/factories/FTProviderFactory.cdc",
+      "aliases": {
+        "testnet": "294e44e1ec6993c6"
+      }
+    },
+    "FlowToken": {
+      "source": "./cadence/contracts/standard/FlowToken.cdc",
+      "aliases": {
+        "emulator": "f8d6e0586b0a20c7",
+        "mainnet": "1654653399040a61",
+        "testnet": "7e60df042a9c0868"
+      }
+    },
+    "FungibleToken": {
+      "source": "./cadence/contracts/standard/FungibleToken.cdc",
+      "aliases": {
+        "emulator": "f8d6e0586b0a20c7",
+        "mainnet": "f233dcee88fe0abe",
+        "testnet": "9a0766d93b6608b7"
+      }
+    },
+    "HelloWorld": "cadence/contracts/HelloWorld.cdc",
+    "HybridCustody": {
+      "source": "cadence/contracts/hybrid-custody/HybridCustody.cdc",
+      "aliases": {
+        "testnet": "294e44e1ec6993c6"
+      }
+    },
+    "MetadataViews": {
+      "source": "./cadence/contracts/standard/MetadataViews.cdc",
+      "aliases": {
+        "emulator": "f8d6e0586b0a20c7",
+        "mainnet": "1d7e57aa55817448",
+        "testnet": "631e88ae7f1d7c20"
+      }
+    },
     "NFTCollectionPublicFactory": {
       "source": "cadence/contracts/hybrid-custody/factories/NFTCollectionPublicFactory.cdc",
       "aliases": {
@@ -37,50 +75,14 @@
         "testnet": "294e44e1ec6993c6"
       }
     },
-    "FTAllFactory": {
-      "source": "cadence/contracts/hybrid-custody/factories/FTAllFactory.cdc",
-      "aliases": {
-        "testnet": "294e44e1ec6993c6"
-      }
-    },
     "NFTProviderFactory": {
       "source": "cadence/contracts/hybrid-custody/factories/NFTProviderFactory.cdc",
       "aliases": {
         "testnet": "294e44e1ec6993c6"
       }
     },
-    "FTProviderFactory": {
-      "source": "cadence/contracts/hybrid-custody/factories/FTProviderFactory.cdc",
-      "aliases": {
-        "testnet": "294e44e1ec6993c6"
-      }
-    },
     "NonFungibleToken": {
       "source": "./cadence/contracts/standard/NonFungibleToken.cdc",
-      "aliases": {
-        "emulator": "f8d6e0586b0a20c7",
-        "mainnet": "1d7e57aa55817448",
-        "testnet": "631e88ae7f1d7c20"
-      }
-    },
-    "FungibleToken": {
-      "source": "./cadence/contracts/standard/FungibleToken.cdc",
-      "aliases": {
-        "emulator": "f8d6e0586b0a20c7",
-        "mainnet": "f233dcee88fe0abe",
-        "testnet": "9a0766d93b6608b7"
-      }
-    },
-    "FlowToken": {
-      "source": "./cadence/contracts/standard/FlowToken.cdc",
-      "aliases": {
-        "emulator": "f8d6e0586b0a20c7",
-        "mainnet": "1654653399040a61",
-        "testnet": "7e60df042a9c0868"
-      }
-    },
-    "MetadataViews": {
-      "source": "./cadence/contracts/standard/MetadataViews.cdc",
       "aliases": {
         "emulator": "f8d6e0586b0a20c7",
         "mainnet": "1d7e57aa55817448",
@@ -117,10 +119,10 @@
       }
     },
     "testnet-account": {
-      "address": "0efb008eb5b89b1b",
+      "address": "140207fa2310a369",
       "key": {
         "type": "file",
-        "location": "./testnet.key"
+        "location": "testnet-account.key"
       }
     }
   },
@@ -128,6 +130,8 @@
     "emulator": {
       "default": ["HelloWorld"]
     },
-    "testnet": {}
+    "testnet": {
+      "testnet-account": ["ExampleNFT", "ExampleNFTCollectionFactory"]
+    }
   }
 }

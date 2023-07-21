@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 import { Magic, MagicUserMetadata } from "magic-sdk";
 import { FlowExtension } from "@magic-ext/flow";
-import { OAuthExtension } from "@magic-ext/oauth";
+import { OAuthExtension, OAuthProvider } from "@magic-ext/oauth";
 import { InstanceWithExtensions, SDKBase } from "@magic-sdk/provider";
 
 import { getChainId } from "@onflow/fcl";
@@ -18,7 +18,8 @@ export interface IFlowContext {
   magic: MagicInstance | null;
   userMetadata: MagicUserMetadata | null;
   isLoggedIn: boolean | null;
-  login: () => Promise<void>;
+  loginEmail: (email: string) => Promise<void>;
+  loginOAuth: (provider: OAuthProvider) => Promise<void>;
   logout: () => Promise<void>;
   authz: any;
 }
@@ -28,7 +29,8 @@ export const FlowContext = createContext<IFlowContext>({
   magic: null,
   userMetadata: null,
   isLoggedIn: false,
-  login: async () => {},
+  loginEmail: async () => {},
+  loginOAuth: async () => {},
   logout: async () => {},
   authz: null,
 });
@@ -40,7 +42,7 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
   const [userMetadata, setUserMetadata] = useState<MagicUserMetadata | null>(
     null
   );
-  const [isLoggedIn, setIsLoggedIn] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [authz, setAuthz] = useState(null);
 
   useEffect(() => {
@@ -71,20 +73,27 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
     })();
   }, []);
 
-  const login = async () => {
+  const loginEmail = async (email: string) => {
     if (!magic) return;
+    await magic.auth.loginWithMagicLink({ email });
+    setIsLoggedIn(true);
+  };
 
+  const loginOAuth = async (provider: OAuthProvider) => {
+    if (!magic) return;
     await magic.oauth.loginWithRedirect({
       redirectURI: window.location.origin + "/oauth",
-      provider: "google",
+      provider,
     });
   };
 
   const logout = async () => {
     if (!magic) return;
-    await magic.user.logout();
     setIsLoggedIn(false);
+    await magic.user.logout();
   };
+
+  console.log((magic?.oauth as OAuthExtension)?.config);
 
   return (
     <FlowContext.Provider
@@ -92,7 +101,8 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
         magic,
         userMetadata,
         isLoggedIn,
-        login,
+        loginEmail,
+        loginOAuth,
         logout,
         authz: magic?.flow?.authorization,
       }}
