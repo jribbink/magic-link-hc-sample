@@ -39,7 +39,7 @@ export default function LinkedAccountsModal({
 
     const parentAuthz = fcl.currentUser().authorization;
     const childAuthz = flow.authz;
-    const adminAddress = "0x4166e410aa50e468";
+    const adminAddress = "0x140207fa2310a369";
 
     fcl
       .mutate({

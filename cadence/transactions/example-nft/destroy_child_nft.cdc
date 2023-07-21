@@ -3,22 +3,12 @@ import "HybridCustody"
 
 transaction(childAddress: Address, id: UInt64) {
   prepare(acct: AuthAccount) {
-    let manager = acct.getCapability<&{HybridCustody.ManagerPrivate}>(HybridCustody.ManagerPrivatePath).borrow()!
-    let child = manager.borrowAccount(addr: childAddress)!.getCapability(path: ExampleNFT.CollectionStoragePath, type: Type<&ExampleNFT.Collection>())?.borrow()!
+    let manager = acct.borrow<&HybridCustody.Manager>(from: HybridCustody.ManagerStoragePath)!
+    let child = manager.borrowAccount(addr: childAddress)!
+    let capability = child.getCapability(path: ExampleNFT.CollectionPrivatePath, type: Type<&ExampleNFT.Collection>())!
+    let collection = capability.borrow<&ExampleNFT.Collection>()!
 
-
+    let nft <- collection.withdraw(withdrawID: id)
+    destroy nft
   }
 }
-
-/*
-
-    let collection = getAccount(address).getCapability(ExampleNFT.CollectionPublicPath).borrow<&{ExampleNFT.Collection>()!
-    var views: {UInt64: MetadataViews.Display} = {}
-    for id in collection.getIDs() {
-      let nft = collection.borrowExampleNFT(id:id)!
-      views[id] = nft.resolveView(Type<MetadataViews.Display>())! as! MetadataViews.Display
-    }
-    nftViews[address] = views
-
-    return nftViews
- */

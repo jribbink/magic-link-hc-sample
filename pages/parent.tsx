@@ -1,51 +1,72 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import NFTGrid from "../components/NFTGrid";
 import { useChildNFTs } from "../hooks/useChildNFTs";
 import * as fcl from "@onflow/fcl";
 import { CurrentUser } from "@onflow/typedefs";
-import { useFlow } from "../contexts/FlowContext";
+import mintNFTCadence from "../cadence/transactions/example-nft/mint_nft.cdc";
 import destroyChildNFTCadence from "../cadence/transactions/example-nft/destroy_child_nft.cdc";
+import { Flex, Heading } from "@chakra-ui/react";
 
 function ParentPage() {
-  const flow = useFlow();
   const [address, setAddress] = useState<string | null>(null);
   const { nfts, mutate: mutateNFTs } = useChildNFTs(address);
 
   useEffect(() => {
-    const prefix = "fcl-parent-mode/";
-    fcl.config().put("fcl.storage", {
-      get: (key: string) =>
-        JSON.parse(sessionStorage.getItem(prefix + key) || "null"),
-      put: (key: string, value: any) =>
-        sessionStorage.setItem(prefix + key, JSON.stringify(value)),
-      can: () => window !== undefined,
-    });
+    const unsubscribe = (async function setup(): Promise<Function> {
+      // hack to clear out the current user
+      delete (globalThis as any).FCL_REGISTRY.CURRENT_USER;
 
-    const unsubscribe = fcl.currentUser().subscribe((user: CurrentUser) => {
-      if (user?.loggedIn) {
-        setAddress(user?.addr || null);
-      } else {
-        setAddress(null);
-      }
-    });
+      // set up the FCL storage to use a different prefix to isolate the parent and child account views
+      const prefix = "fcl-parent-mode/";
+      fcl.config().put("fcl.storage", {
+        get: (key: string) =>
+          JSON.parse(localStorage.getItem(prefix + key) || "null"),
+        put: (key: string, value: any) =>
+          localStorage.setItem(prefix + key, JSON.stringify(value)),
+        can: () => window !== undefined,
+      });
+
+      await fcl.currentUser().snapshot();
+
+      return fcl.currentUser().subscribe((user: CurrentUser) => {
+        if (user?.loggedIn) {
+          setAddress(user?.addr || null);
+        } else {
+          setAddress(null);
+        }
+      });
+    })();
 
     return () => {
       fcl.config().delete("fcl.storage");
-      unsubscribe();
+      fcl.currentUser().snapshot();
+      unsubscribe.then((x) => x());
     };
   }, []);
 
-  useEffect(() => {
-    fcl.authenticate();
-  }, []);
+  async function mintChildNFT(childAddr: string) {
+    return fcl
+      .mutate({
+        cadence: mintNFTCadence,
+        limit: 9999,
+        args: (arg: any, t: any) => [arg(childAddr, t.Optional(t.Address))],
+      } as any)
+      .then((txId) => fcl.tx(txId).onceSealed())
+      .then((status) => {
+        if (status.errorMessage) {
+          throw new Error(status.errorMessage);
+        }
+        mutateNFTs();
+      });
+  }
 
-  async function destroyChildNFT(id: string) {
+  async function destroyChildNFT(childAddr: string, id: string) {
     return fcl
       .mutate({
         cadence: destroyChildNFTCadence,
         limit: 9999,
         args: (arg: any, t: any) => [
-          arg(flow.userMetadata?.publicAddress, t.Address),
+          arg(childAddr, t.Address),
           arg(id, t.UInt64),
         ],
       } as any)
@@ -60,15 +81,20 @@ function ParentPage() {
 
   if (!nfts) return null;
 
-  return Object.keys(nfts).map((childAccount) => (
-    <NFTGrid
-      key={childAccount}
-      headingText={`NFTs for ${childAccount}`}
-      nfts={nfts[childAccount]}
-      onMintNFT={() => {}}
-      onDestroyNFT={(id) => destroyChildNFT(id)}
-    ></NFTGrid>
-  ));
+  return (
+    <Flex flexDirection="column">
+      <Heading>Parent/Wallet Account</Heading>
+      {Object.keys(nfts).map((childAddress) => (
+        <NFTGrid
+          key={childAddress}
+          headingText={`Child ${childAddress} NFTs`}
+          nfts={nfts[childAddress]}
+          onMintNFT={() => mintChildNFT(childAddress)}
+          onDestroyNFT={(id) => destroyChildNFT(childAddress, id)}
+        ></NFTGrid>
+      ))}
+    </Flex>
+  );
 }
 
 export default ParentPage;

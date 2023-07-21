@@ -16,7 +16,6 @@ import { useRouter } from "next/router";
 import mintNFTCadence from "../cadence/transactions/example-nft/mint_nft.cdc";
 import destroyNFTCadence from "../cadence/transactions/example-nft/destroy_nft.cdc";
 import * as fcl from "@onflow/fcl";
-import { useEffect } from "react";
 
 export default function Home() {
   const router = useRouter();
@@ -29,6 +28,7 @@ export default function Home() {
         cadence: mintNFTCadence,
         limit: 9999,
         authz: flow.authz,
+        args: (arg: any, t: any) => [arg(null, t.Optional(t.Address))],
       } as any)
       .then((txId) => fcl.tx(txId).onceSealed())
       .then((status) => {
@@ -59,6 +59,7 @@ export default function Home() {
   return (
     <>
       <Flex flexDirection="column" gap={8}>
+        <Heading>Child Account</Heading>
         <NFTGrid
           nfts={nfts}
           onMintNFT={mintNFT}
