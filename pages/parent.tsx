@@ -5,7 +5,7 @@ import * as fcl from "@onflow/fcl";
 import { CurrentUser } from "@onflow/typedefs";
 import mintNFTCadence from "../cadence/transactions/example-nft/mint_nft.cdc";
 import destroyChildNFTCadence from "../cadence/transactions/example-nft/destroy_child_nft.cdc";
-import { Flex, Heading } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Spinner, Text } from "@chakra-ui/react";
 
 function ParentPage() {
   const [address, setAddress] = useState<string | null>(null);
@@ -79,20 +79,51 @@ function ParentPage() {
       });
   }
 
-  if (!nfts) return null;
-
   return (
-    <Flex flexDirection="column">
-      <Heading>Parent/Wallet Account</Heading>
-      {Object.keys(nfts).map((childAddress) => (
-        <NFTGrid
-          key={childAddress}
-          headingText={`Child ${childAddress} NFTs`}
-          nfts={nfts[childAddress]}
-          onMintNFT={() => mintChildNFT(childAddress)}
-          onDestroyNFT={(id) => destroyChildNFT(childAddress, id)}
-        ></NFTGrid>
-      ))}
+    <Flex flexDirection="column" gap={8}>
+      <Heading>Parent Account (Wallet)</Heading>
+
+      <Text>
+        In this mode, transactions are signed by your wallet account in order to
+        create/destroy NFT resources on child (app) accounts.{" "}
+        <b>Approvals are required</b> for transactions since they are signed by
+        your wallet account.
+      </Text>
+
+      {address ? (
+        nfts ? (
+          Object.keys(nfts).map((childAddress) => (
+            <NFTGrid
+              key={childAddress}
+              headingText={`Child ${childAddress}`}
+              nfts={nfts[childAddress]}
+              onMintNFT={() => mintChildNFT(childAddress)}
+              onDestroyNFT={(id) => destroyChildNFT(childAddress, id)}
+            ></NFTGrid>
+          ))
+        ) : (
+          <Flex flexDir="column" alignItems="center">
+            <Spinner size="lg"></Spinner>
+          </Flex>
+        )
+      ) : (
+        <Flex flexDirection="column" gap={4} pt={4}>
+          <Flex justifyContent="center">
+            <Text fontWeight="bold" fontSize="lg">
+              To get started, you must connect a wallet
+            </Text>
+          </Flex>
+          <Flex justifyContent="center">
+            <Button
+              colorScheme="blue"
+              size="lg"
+              onClick={() => fcl.authenticate()}
+            >
+              Connect Wallet
+            </Button>
+          </Flex>
+        </Flex>
+      )}
     </Flex>
   );
 }

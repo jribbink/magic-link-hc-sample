@@ -15,6 +15,7 @@ import { useParentAccounts } from "../hooks/useParentAccounts";
 import * as fcl from "@onflow/fcl";
 import setupMultiSig from "../cadence/transactions/hybrid-custody/setup-multi-sig.cdc";
 import removeParentFromChild from "../cadence/transactions/hybrid-custody/remove_parent_from_child.cdc";
+import { useState } from "react";
 
 interface OAuthProviderItem {
   name: string;
@@ -31,10 +32,15 @@ export default function LinkedAccountsModal({
   isOpen,
   onClose,
 }: LinkedAccountsModalProps) {
-  const { parentAccounts } = useParentAccounts();
   const flow = useFlow();
+  const { parentAccounts, mutate: mutateParentAccounts } = useParentAccounts();
+
+  const [isLinking, setIsLinking] = useState(false);
+  const [isRemovingIdx, setIsRemovingIdx] = useState<number>(-1);
 
   function linkAccount() {
+    setIsLinking(true);
+
     fcl.unauthenticate();
 
     const parentAuthz = fcl.currentUser().authorization;
@@ -54,16 +60,28 @@ export default function LinkedAccountsModal({
           arg(adminAddress, t.Address),
         ],
       } as any)
-      .then((tx) => fcl.tx(tx).onceSealed);
+      .then((tx) => fcl.tx(tx).onceSealed())
+      .finally(() => {
+        setIsLinking(false);
+        mutateParentAccounts();
+      });
   }
 
   function unlinkAccount(addr: string) {
-    fcl.mutate({
-      cadence: removeParentFromChild,
-      limit: 9999,
-      authz: flow.authz,
-      args: (arg: any, t: any) => [arg(addr, t.Address)],
-    } as any);
+    setIsRemovingIdx(parentAccounts!.indexOf(addr));
+
+    fcl
+      .mutate({
+        cadence: removeParentFromChild,
+        limit: 9999,
+        authz: flow.authz,
+        args: (arg: any, t: any) => [arg(addr, t.Address)],
+      } as any)
+      .then((tx) => fcl.tx(tx).onceSealed())
+      .finally(() => {
+        mutateParentAccounts();
+        setIsRemovingIdx(-1);
+      });
   }
 
   return (
@@ -84,13 +102,32 @@ export default function LinkedAccountsModal({
                       ml="auto"
                       onClick={() => unlinkAccount(parentAddr)}
                       colorScheme="red"
+                      disabled={isRemovingIdx !== -1}
                     >
-                      Unlink
+                      {isRemovingIdx === parentAccounts.indexOf(parentAddr) ? (
+                        <>
+                          <Text>Unlinking</Text>
+                          <Spinner colorScheme="red" ml="2" />
+                        </>
+                      ) : (
+                        <Text>Unlink</Text>
+                      )}
                     </Button>
                   </Flex>
                 ))}
-                <Button colorScheme="blue" onClick={() => linkAccount()}>
-                  Link New Account
+                <Button
+                  colorScheme="blue"
+                  onClick={() => linkAccount()}
+                  disabled={isLinking}
+                >
+                  {isLinking ? (
+                    <>
+                      <Text>Linking (this many take some time)</Text>
+                      <Spinner colorScheme="blue" ml="2" />
+                    </>
+                  ) : (
+                    <Text>Link New Account</Text>
+                  )}
                 </Button>
               </Flex>
             ) : (

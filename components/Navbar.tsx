@@ -1,7 +1,5 @@
-import navbarStyles from "../styles/Navbar.module.css";
-import elementStyles from "../styles/Elements.module.css";
 import { FlowContext } from "../contexts/FlowContext";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -15,22 +13,19 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { ChevronDownIcon, InfoIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import SignInModal from "./SignInModal";
 import LinkedAccountsModal from "./LinkedAccountsModal";
 import FundAccountModal from "./FundAccountModal";
 import { useBalance } from "../hooks/useBalance";
 import { useRouter } from "next/router";
+import * as fcl from "@onflow/fcl";
+import { CurrentUser } from "@onflow/typedefs";
 
 export default function Navbar() {
   const router = useRouter();
   const flow = useContext(FlowContext);
   const { balance } = useBalance(flow.userMetadata?.publicAddress);
-  const {
-    isOpen: isSignInOpen,
-    onClose: onSignInClose,
-    onOpen: showSignIn,
-  } = useDisclosure();
   const {
     isOpen: isLinkedAccountsOpen,
     onClose: onLinkedAccountsClose,
@@ -44,9 +39,37 @@ export default function Navbar() {
 
   const parentMode = router.pathname === "/parent";
 
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
+  const { balance: parentBalance } = useBalance(currentUser?.addr);
+
+  useEffect(() => {
+    const unsub = fcl.currentUser().subscribe((user: CurrentUser) => {
+      if (!user?.loggedIn) {
+        setCurrentUser(null);
+        return;
+      }
+
+      setCurrentUser(user);
+    });
+
+    return () => unsub();
+  });
+
   return (
     <>
-      <Flex w="full" padding={4} borderBottom="1px" alignItems="center">
+      <Flex
+        padding={4}
+        borderBottom="1px"
+        borderColor="gray.200"
+        alignItems="center"
+        position="fixed"
+        top="0"
+        left="0"
+        right="0"
+        height="75"
+        backgroundColor="white"
+        zIndex="1000"
+      >
         <Heading size="lg" mr="auto">
           Flow HC Magic Link
         </Heading>
@@ -65,37 +88,45 @@ export default function Navbar() {
             }}
           ></Switch>
         </Flex>
-        <Box>
-          {flow.isLoggedIn === null ? (
-            <div className={navbarStyles.address}>Loading...</div>
-          ) : flow.isLoggedIn === false ? (
-            <button onClick={showSignIn} className={elementStyles.button}>
-              Sign In
-            </button>
-          ) : (
-            <Menu>
-              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-                {flow.userMetadata?.email}
-              </MenuButton>
-              <MenuList>
-                {balance ? <MenuItem>{balance} FLOW</MenuItem> : null}
-                <MenuItem onClick={() => showLinkedAccounts()}>
-                  Linked Accounts
-                </MenuItem>
-                <MenuItem onClick={() => showFundAccount()}>
-                  Fund Account
-                </MenuItem>
-                <MenuItem onClick={() => flow.logout()}>Logout</MenuItem>
-              </MenuList>
-            </Menu>
-          )}
-        </Box>
+        {router.pathname === "/oauth" ? null : !parentMode ? (
+          <Box>
+            {flow.isLoggedIn === null ? (
+              <Box>Loading...</Box>
+            ) : flow.isLoggedIn === false ? (
+              <Button colorScheme="blue" onClick={() => flow.login()}>
+                Login/Signup
+              </Button>
+            ) : (
+              <Menu>
+                <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+                  {flow.userMetadata?.email}
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={() => showLinkedAccounts()}>
+                    Linked Accounts
+                  </MenuItem>
+                  <MenuItem onClick={() => flow.logout()}>Logout</MenuItem>
+                </MenuList>
+              </Menu>
+            )}
+          </Box>
+        ) : currentUser?.loggedIn ? (
+          <Menu>
+            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+              {currentUser?.addr}
+            </MenuButton>
+            <MenuList>
+              {parentBalance ? <MenuItem>{parentBalance} FLOW</MenuItem> : null}
+              <MenuItem onClick={() => fcl.unauthenticate()}>Logout</MenuItem>
+            </MenuList>
+          </Menu>
+        ) : (
+          <Button colorScheme="blue" onClick={() => fcl.authenticate()}>
+            Connect Wallet
+          </Button>
+        )}
       </Flex>
 
-      <SignInModal
-        isOpen={isSignInOpen}
-        onClose={() => onSignInClose()}
-      ></SignInModal>
       <LinkedAccountsModal
         isOpen={isLinkedAccountsOpen}
         onClose={onLinkedAccountsClose}

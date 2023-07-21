@@ -5,8 +5,8 @@ import { useFlow } from "../contexts/FlowContext";
 
 export function useParentAccounts() {
   const flow = useFlow();
-  const address: string = flow.userMetadata?.publicAddress;
-  const { data, error } = useSWR(
+  const address: string | null = flow.userMetadata?.publicAddress || null;
+  const { data, error, mutate } = useSWR(
     address ? ["useParentAccounts", address] : null,
     async ([_, address]) => {
       return fcl
@@ -24,5 +24,6 @@ export function useParentAccounts() {
     parentAccounts: data,
     isLoading: !error && !data,
     isError: error,
+    mutate: mutate,
   };
 }

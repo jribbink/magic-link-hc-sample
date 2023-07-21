@@ -36,12 +36,12 @@ export default function NFTGrid({
   }
 
   return (
-    <Box>
-      <Flex flexDir="row" justifyContent="space-between">
-        <Heading size="md" mb="4">
+    <Flex flexDirection="column" gap={4}>
+      <Flex flexDir="row" justifyContent="space-between" alignItems="center">
+        <Heading size="md" mb="4" my="auto">
           {headingText || "My NFTs"}
         </Heading>
-        <Button onClick={handleMintNFT} colorScheme="green">
+        <Button onClick={handleMintNFT} colorScheme="green" alignItems="center">
           <AddIcon mr="2" />
           <Text>Mint New NFT</Text>
         </Button>
@@ -72,6 +72,6 @@ export default function NFTGrid({
           <Spinner size="xl" my="auto" />
         </Flex>
       )}
-    </Box>
+    </Flex>
   );
 }
