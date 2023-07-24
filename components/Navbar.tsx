@@ -14,9 +14,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import SignInModal from "./SignInModal";
 import LinkedAccountsModal from "./LinkedAccountsModal";
-import FundAccountModal from "./FundAccountModal";
 import { useBalance } from "../hooks/useBalance";
 import { useRouter } from "next/router";
 import * as fcl from "@onflow/fcl";
@@ -30,11 +28,6 @@ export default function Navbar() {
     isOpen: isLinkedAccountsOpen,
     onClose: onLinkedAccountsClose,
     onOpen: showLinkedAccounts,
-  } = useDisclosure();
-  const {
-    isOpen: isFundAccountOpen,
-    onClose: onFundAccountClose,
-    onOpen: showFundAccount,
   } = useDisclosure();
 
   const parentMode = router.pathname === "/parent";
@@ -131,10 +124,6 @@ export default function Navbar() {
         isOpen={isLinkedAccountsOpen}
         onClose={onLinkedAccountsClose}
       ></LinkedAccountsModal>
-      <FundAccountModal
-        isOpen={isFundAccountOpen}
-        onClose={onFundAccountClose}
-      ></FundAccountModal>
     </>
   );
 }

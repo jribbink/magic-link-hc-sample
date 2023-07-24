@@ -59,7 +59,7 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (!magic) return;
 
-    // Get oauth redirect result if exists
+    // Update logged in state if logged in
     magic.user.isLoggedIn().then(async (magicIsLoggedIn) => {
       setIsLoggedIn(magicIsLoggedIn);
       if (magicIsLoggedIn) {
@@ -87,9 +87,12 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
   const loginEmail = async (email: string) => {
     if (!magic) return;
     await magic.auth.loginWithMagicLink({ email });
+
+    // Set logged in state & user metadata
     setIsLoggedIn(true);
     const metadata = await magic.user.getMetadata();
     setUserMetadata(metadata);
+
     return metadata;
   };
 
@@ -113,6 +116,7 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
   };
 
   const setupAccount = async (address: string) => {
+    // Check if the NFT collection has been set up, if not, set it up
     const isNFTSetup = await fcl.query({
       cadence: checkNFTSetup,
       args: (arg, t) => [arg(address, t.Address)],
@@ -132,15 +136,11 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    const isOwnedAccountSetup = await fcl
-      .query({
-        cadence: checkOwnedAccountSetup,
-        args: (arg, t) => [arg(address, t.Address)],
-      })
-      .then((r) => {
-        console.log("res", r);
-        return r;
-      });
+    // Check if the owned account has been set up (for account linking), if not, set it up
+    const isOwnedAccountSetup = await fcl.query({
+      cadence: checkOwnedAccountSetup,
+      args: (arg, t) => [arg(address, t.Address)],
+    });
 
     if (!isOwnedAccountSetup) {
       const ownedAccountSetupResult = await fcl

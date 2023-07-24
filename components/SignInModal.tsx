@@ -56,12 +56,11 @@ export default function SignInModal({
   function handleEmailLogin() {
     loginEmail(email)
       .then(async (metadata) => {
-        // TODO: only do this first setup if the account doesn't exist
         setMessage("Setting up your account...");
 
-        await flow.setupAccount(metadata?.publicAddress!).finally(() => {
-          onClose();
-        });
+        // Setup account then close modal
+        await flow.setupAccount(metadata?.publicAddress!);
+        onClose();
       })
       .catch((e) => {
         console.error(e);
@@ -69,6 +68,7 @@ export default function SignInModal({
       });
   }
 
+  // Clear message when modal is opened/closed
   useEffect(() => {
     setMessage("");
   }, [isOpen]);
