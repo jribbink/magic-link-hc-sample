@@ -1,11 +1,8 @@
-import "../styles/globals.css";
-
 // Import FCL config
 import "../config/fcl";
 import { FlowProvider } from "../contexts/FlowContext";
 import DefaultLayout from "../layouts/DefaultLayout";
 import { ChakraProvider } from "@chakra-ui/react";
-import { useEffect } from "react";
 
 interface MyAppProps {
   Component: any;

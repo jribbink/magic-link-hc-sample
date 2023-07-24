@@ -1,4 +1,6 @@
-This is a scaffold for an FCL NextJS Dapp on the Flow Blockchain.
+# Magic Link HC Example
+
+This is an example of a minimal hybrid custody app using Magic Link for the Flow Blockchain. It follows the [NFT standard](https://github.com/onflow/flow-nft) for a very minimal NFT contract which allows anyone to mint an NFT.
 
 ## Features Provided
 
@@ -10,7 +12,7 @@ This is a scaffold for an FCL NextJS Dapp on the Flow Blockchain.
 - Authentication
 - CDC file loader
 - Custom hooks
-- Deployment 
+- Deployment
 
 ## Featues TODO
 
@@ -60,7 +62,7 @@ Then run:
 
 ```
 npm run dev:testnet:deploy
-``` 
+```
 
 Whenever you need to redeploy changed contracts to Testnet while seeing the diff between deployed contracts and updates being pushed, you can run:
 
