@@ -23,6 +23,7 @@ export default function Home() {
   const flow = useFlow();
   const { nfts, mutate: mutateNFTs } = useNFTs();
 
+  // This is a function that will be called when the user clicks the "Mint NFT" button
   async function mintNFT() {
     return fcl
       .mutate({
@@ -40,6 +41,7 @@ export default function Home() {
       });
   }
 
+  // This is a function that will be called when the user clicks the "Destroy NFT" button
   async function destroyNFT(id: string) {
     return fcl
       .mutate({
@@ -59,6 +61,14 @@ export default function Home() {
 
   return (
     <>
+      <Head>
+        <title>Flow Magic Link HC</title>
+        <meta
+          name="description"
+          content="A demo of the Flow Magic Link Hybrid Custody pattern"
+        />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <Flex flexDirection="column" gap={8}>
         <Heading>Child Account (App)</Heading>
 
@@ -94,14 +104,6 @@ export default function Home() {
           </Flex>
         )}
       </Flex>
-      <Head>
-        <title>FCL Next Scaffold</title>
-        <meta
-          name="description"
-          content="FCL Next Scaffold for the Flow Blockchain"
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
     </>
   );
 }

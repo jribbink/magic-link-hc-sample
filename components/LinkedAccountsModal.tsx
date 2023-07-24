@@ -10,18 +10,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useFlow } from "../contexts/FlowContext";
-import { OAuthProvider } from "@magic-ext/oauth";
 import { useParentAccounts } from "../hooks/useParentAccounts";
 import * as fcl from "@onflow/fcl";
 import setupMultiSig from "../cadence/transactions/hybrid-custody/setup-multi-sig.cdc";
 import removeParentFromChild from "../cadence/transactions/hybrid-custody/remove_parent_from_child.cdc";
 import { useState } from "react";
-
-interface OAuthProviderItem {
-  name: string;
-  icon: string;
-  provider: OAuthProvider;
-}
 
 interface LinkedAccountsModalProps {
   isOpen: boolean;
@@ -35,19 +28,25 @@ export default function LinkedAccountsModal({
   const flow = useFlow();
   const { parentAccounts, mutate: mutateParentAccounts } = useParentAccounts();
 
+  // State variables for transaction progress spinners
   const [isLinking, setIsLinking] = useState(false);
   const [isRemovingIdx, setIsRemovingIdx] = useState<number>(-1);
 
-  function linkAccount() {
+  async function linkAccount() {
+    // Show a spinner next to the "Link New Account" button
     setIsLinking(true);
 
+    // Make sure that FCL is unauthenticated before we try to link a new account
     fcl.unauthenticate();
 
     const parentAuthz = fcl.currentUser().authorization;
     const childAuthz = flow.authz;
     const adminAddress = "0x140207fa2310a369";
 
-    fcl
+    // This transaction will link the parent account to the child account
+    // This uses the multi-sig approach in order to establish this link, however
+    // this can be done in two steps if needed for your use case.
+    await fcl
       .mutate({
         cadence: setupMultiSig,
         limit: 9999,
@@ -62,15 +61,18 @@ export default function LinkedAccountsModal({
       } as any)
       .then((tx) => fcl.tx(tx).onceSealed())
       .finally(() => {
+        // Reset the spinner
         setIsLinking(false);
+        // Refresh the parent account list
         mutateParentAccounts();
       });
   }
 
-  function unlinkAccount(addr: string) {
+  async function unlinkAccount(addr: string) {
+    // Show a spinner next to the account that is being unlinked
     setIsRemovingIdx(parentAccounts!.indexOf(addr));
 
-    fcl
+    await fcl
       .mutate({
         cadence: removeParentFromChild,
         limit: 9999,
@@ -79,7 +81,9 @@ export default function LinkedAccountsModal({
       } as any)
       .then((tx) => fcl.tx(tx).onceSealed())
       .finally(() => {
+        // Refresh the parent account list
         mutateParentAccounts();
+        // Reset the spinner
         setIsRemovingIdx(-1);
       });
   }

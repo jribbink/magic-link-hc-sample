@@ -1,7 +1,11 @@
+/*
+  This page is used to handle the OAuth redirect from Magic.
+  From here we will setup the user's account and redirect them to the home page.
+*/
+
 import { useEffect, useState } from "react";
 import { useFlow } from "../contexts/FlowContext";
 import { useRouter } from "next/router";
-
 import { Heading } from "@chakra-ui/react";
 
 function OAuthPage() {
@@ -14,11 +18,13 @@ function OAuthPage() {
     flow.magic.oauth
       .getRedirectResult()
       .then(async (res) => {
-        // TODO: only do this first setup if the account doesn't exist
-        setMessage("Setting up your account...");
+        // Trigger a user metadata refresh
+        flow.refreshLogin();
 
+        setMessage("Setting up your account...");
         await flow.setupAccount(res.magic.userMetadata.publicAddress!);
 
+        // Redirect to home page
         router.replace("/");
       })
       .catch((e) => {

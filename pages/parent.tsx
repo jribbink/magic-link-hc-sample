@@ -32,9 +32,9 @@ function ParentPage() {
       const prefix = "fcl-parent-mode/";
       fcl.config().put("fcl.storage", {
         get: (key: string) =>
-          JSON.parse(localStorage.getItem(prefix + key) || "null"),
+          JSON.parse(sessionStorage.getItem(prefix + key) || "null"),
         put: (key: string, value: any) =>
-          localStorage.setItem(prefix + key, JSON.stringify(value)),
+          sessionStorage.setItem(prefix + key, JSON.stringify(value)),
         can: () => window !== undefined,
       });
 
@@ -58,6 +58,8 @@ function ParentPage() {
     };
   }, []);
 
+  // This is a function that will be called when the user clicks the "Mint NFT" button
+  // It will mint an NFT on the child account that is passed in
   async function mintChildNFT(childAddr: string) {
     return fcl
       .mutate({
@@ -74,6 +76,8 @@ function ParentPage() {
       });
   }
 
+  // This is a function that will be called when the user clicks the "Destroy NFT" button
+  // It will destroy an NFT with the provided id on the child account that is passed in
   async function destroyChildNFT(childAddr: string, id: string) {
     return fcl
       .mutate({

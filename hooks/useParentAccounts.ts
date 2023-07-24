@@ -9,14 +9,15 @@ export function useParentAccounts() {
   const { data, error, mutate } = useSWR(
     address ? ["useParentAccounts", address] : null,
     async ([_, address]) => {
-      return fcl
-        .query({
-          cadence: getParentsFromChild,
-          args: (arg, t) => [arg(address, t.Address)],
-        })
-        .then((res: { [addr: string]: string }) =>
-          Object.keys(res).filter(Boolean)
-        );
+      const addresses: { [addr: string]: Boolean } = await fcl.query({
+        cadence: getParentsFromChild,
+        args: (arg, t) => [arg(address, t.Address)],
+      });
+
+      // Filter out parents which have not accepted child account
+      // This isn't really relevant as we use a multi-sig transaction,
+      // however it is good practice
+      return Object.keys(addresses).filter((addr) => addresses[addr]);
     }
   );
 

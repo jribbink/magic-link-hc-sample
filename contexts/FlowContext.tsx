@@ -29,6 +29,7 @@ export interface IFlowContext {
   logout: () => Promise<void>;
   setupAccount: (address: string) => Promise<void>;
   authz: any;
+  refreshLogin: () => Promise<MagicUserMetadata | null>;
 }
 
 // create react context
@@ -40,6 +41,7 @@ export const FlowContext = createContext<IFlowContext>({
   logout: async () => {},
   setupAccount: async (address: string) => {},
   authz: null,
+  refreshLogin: async () => null,
 });
 
 // Path: src/contexts/FlowContext.ts
@@ -89,10 +91,10 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
     await magic.auth.loginWithMagicLink({ email });
 
     // Set logged in state & user metadata
-    setIsLoggedIn(true);
-    const metadata = await magic.user.getMetadata();
-    setUserMetadata(metadata);
-
+    const metadata = await refreshLogin();
+    if (!metadata) {
+      throw new Error("Unable to login");
+    }
     return metadata;
   };
 
@@ -157,6 +159,18 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const refreshLogin = async () => {
+    if (!magic) return null;
+
+    const magicIsLoggedIn = await magic.user.isLoggedIn();
+    const metadata = await magic.user.getMetadata().catch(() => null);
+
+    setIsLoggedIn(magicIsLoggedIn);
+    setUserMetadata(metadata);
+
+    return metadata;
+  };
+
   return (
     <FlowContext.Provider
       value={{
@@ -167,6 +181,7 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
         logout,
         authz: magic?.flow?.authorization,
         setupAccount,
+        refreshLogin,
       }}
     >
       {children}
