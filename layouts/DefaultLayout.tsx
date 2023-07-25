@@ -1,4 +1,4 @@
-import { Box, Container, Flex } from "@chakra-ui/react";
+import { Container, Flex } from "@chakra-ui/react";
 import Navbar from "../components/Navbar";
 
 interface DefaultLayoutProps {

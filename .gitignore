@@ -35,6 +35,4 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-testnet-account.private.json
-*.key
-testnet.pkey
+testnet-admin.key

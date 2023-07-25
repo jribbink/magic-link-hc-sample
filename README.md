@@ -2,22 +2,9 @@
 
 This is an example of a minimal hybrid custody app using Magic Link for the Flow Blockchain. It follows the [NFT standard](https://github.com/onflow/flow-nft) for a very minimal NFT contract which allows anyone to mint an NFT.
 
-## Features Provided
+This is a fork of the [FCL Next Scaffold](https://github.com/chasefleming/fcl-next-scaffold).
 
-- FCL setup and configuration
-- "flow dev" integration for automatic local account creation and contract deployment
-- Wallet Discovery (including Dev Wallet on Emulator)
-- CLI private key separation for security
-- Flow.json loading for contract placeholders
-- Authentication
-- CDC file loader
-- Custom hooks
-- Deployment
-
-## Featues TODO
-
-- Mainnet deployment
-- JS Testing
+**NOTE** Currently this app only works as is in **testnet**. It will not work in the emulator or on mainnet. This is because the Magic Link service is not yet available on the emulator and account linking is not yet available on mainnet.
 
 ## Running the App
 

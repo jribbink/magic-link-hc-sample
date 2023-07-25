@@ -15,6 +15,7 @@ import * as fcl from "@onflow/fcl";
 import setupMultiSig from "../cadence/transactions/hybrid-custody/setup-multi-sig.cdc";
 import removeParentFromChild from "../cadence/transactions/hybrid-custody/remove_parent_from_child.cdc";
 import { useState } from "react";
+import { ADMIN_ACCOUNT_ADDRESS } from "../config/admin";
 
 interface LinkedAccountsModalProps {
   isOpen: boolean;
@@ -41,7 +42,6 @@ export default function LinkedAccountsModal({
 
     const parentAuthz = fcl.currentUser().authorization;
     const childAuthz = flow.authz;
-    const adminAddress = "0x140207fa2310a369";
 
     // This transaction will link the parent account to the child account
     // This uses the multi-sig approach in order to establish this link, however
@@ -55,8 +55,8 @@ export default function LinkedAccountsModal({
         authorizations: [childAuthz, parentAuthz],
         args: (arg: any, t: any) => [
           arg(null, t.Optional(t.Address)),
-          arg(adminAddress, t.Address),
-          arg(adminAddress, t.Address),
+          arg(ADMIN_ACCOUNT_ADDRESS, t.Address),
+          arg(ADMIN_ACCOUNT_ADDRESS, t.Address),
         ],
       } as any)
       .then((tx) => fcl.tx(tx).onceSealed())

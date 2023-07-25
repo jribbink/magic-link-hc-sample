@@ -118,11 +118,11 @@
         "location": "./emulator.key"
       }
     },
-    "testnet-account": {
+    "testnet-admin": {
       "address": "140207fa2310a369",
       "key": {
         "type": "file",
-        "location": "testnet-account.key"
+        "location": "testnet-admin.key"
       }
     }
   },
