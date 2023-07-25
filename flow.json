@@ -19,7 +19,6 @@
       }
     },
     "ExampleNFT": "./cadence/contracts/example-nft/ExampleNFT.cdc",
-    "ExampleNFTCollectionFactory": "./cadence/contracts/example-nft/factories/ExampleNFTCollectionFactory.cdc",
     "FTAllFactory": {
       "source": "cadence/contracts/hybrid-custody/factories/FTAllFactory.cdc",
       "aliases": {
@@ -131,7 +130,7 @@
       "default": ["HelloWorld"]
     },
     "testnet": {
-      "testnet-account": ["ExampleNFT", "ExampleNFTCollectionFactory"]
+      "testnet-admin": ["ExampleNFT"]
     }
   }
 }
