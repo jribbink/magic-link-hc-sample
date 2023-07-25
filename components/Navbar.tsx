@@ -23,7 +23,6 @@ import { CurrentUser } from "@onflow/typedefs";
 export default function Navbar() {
   const router = useRouter();
   const flow = useContext(FlowContext);
-  const { balance } = useBalance(flow.userMetadata?.publicAddress);
   const {
     isOpen: isLinkedAccountsOpen,
     onClose: onLinkedAccountsClose,
@@ -46,7 +45,7 @@ export default function Navbar() {
     });
 
     return () => unsub();
-  });
+  }, [router.pathname]);
 
   return (
     <>
