@@ -4,7 +4,7 @@ This is an example of a minimal hybrid custody app using Magic Link for the Flow
 
 This is a fork of the [FCL Next Scaffold](https://github.com/chasefleming/fcl-next-scaffold).
 
-**NOTE** Currently this app only works as is in **testnet**. It will not work in the emulator or on mainnet. This is because the Magic Link service is not yet available on the emulator and account linking is not yet available on mainnet.
+**NOTE:** Currently this app only works as is in **testnet**. It will not work in the emulator or on mainnet. This is because the Magic Link service is not yet available on the emulator and account linking is not yet available on mainnet.
 
 ## Getting Started
 
@@ -71,15 +71,9 @@ flow accounts create
 
 Follow the steps and select testnet. This will create a `[name].pkey` file (make sure this is gitignored) and add your account to flow.json.
 
-Note that the app looks for `mainnet-admin`/`testnet-admin`/`emulator-account` in `flow.json` to determine `CapabilityFilter` and `CapabilityFactory` configurations for HybridCustody. The name of the admin account is configured in `constants/index.ts`.
+**NOTE:** The app looks for `mainnet-admin`/`testnet-admin`/`emulator-account` in `flow.json` to determine `CapabilityFilter` and `CapabilityFactory` configurations for HybridCustody. The name of the admin account is configured in `constants/index.ts`.
 
 Because of this, you should delete the existing admin account from `flow.json` and replace it with the account you just created. You can also change the name of the admin account in `constants/index.ts` if you want to use a different name.
-
-Then run:
-
-```
-
-**NOTE**
 
 Then run:
 
@@ -104,4 +98,7 @@ Currently, mainnet does not support account linking.
 ### Local Development
 
 Currently, Magic Link does not support local development.
+
+```
+
 ```
