@@ -2,7 +2,7 @@ import flowJson from "../flow.json";
 import { ADMIN_ACCOUNT_NAMES } from "../constants";
 import { withPrefix } from "@onflow/fcl";
 
-const flowNetwork = process.env.NEXT_PUBLIC_FLOW_NETWORK;
+const flowNetwork = process.env.FLOW_NETWORK;
 
 // Resolved name of the admin account in flow.json
 const accountName =

@@ -1,15 +1,15 @@
-const flowNetwork = process.env.NEXT_PUBLIC_FLOW_NETWORK;
+const flowNetwork = process.env.FLOW_NETWORK!;
 
-const configs = {
-  testnet: {
-    apiKey: "pk_live_41A13A15F0792BBB",
-  },
-  mainnet: {
-    apiKey: "pk_live_41A13A15F0792BBB",
-  },
-  local: {
-    apiKey: "pk_live_41A13A15F0792BBB",
-  },
+// Get the Magic API key from the environment variables
+let apiKey;
+if (flowNetwork === "mainnet") {
+  apiKey = process.env.MAGIC_PUBLISHABLE_KEY_MAINNET;
+} else if (flowNetwork === "testnet") {
+  apiKey = process.env.MAGIC_PUBLISHABLE_KEY_TESTNET;
+} else {
+  apiKey = process.env.MAGIC_PUBLISHABLE_KEY_LOCAL;
+}
+
+export const MAGIC_CONFIG = {
+  apiKey: apiKey,
 };
-
-export const MAGIC_CONFIG = configs[flowNetwork as keyof typeof configs];

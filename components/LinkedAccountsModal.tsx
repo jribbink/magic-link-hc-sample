@@ -15,7 +15,7 @@ import * as fcl from "@onflow/fcl";
 import setupMultiSig from "../cadence/transactions/hybrid-custody/setup-multi-sig.cdc";
 import removeParentFromChild from "../cadence/transactions/hybrid-custody/remove_parent_from_child.cdc";
 import { useState } from "react";
-import { ADMIN_ACCOUNT_ADDRESS } from "../config/admin";
+import { ADMIN_ACCOUNT_ADDRESS } from "../config/admin-account";
 
 interface LinkedAccountsModalProps {
   isOpen: boolean;
