@@ -77,28 +77,20 @@ Because of this, you should delete the existing admin account from `flow.json` a
 
 Then run:
 
-```
-
+```sh
 npm run dev:testnet:deploy
-
 ```
 
 Whenever you need to redeploy changed contracts to Testnet while seeing the diff between deployed contracts and updates being pushed, you can run:
 
-```
-
+```sh
 npm run dev:testnet:update
-
 ```
 
 ### Mainnet
 
-Currently, mainnet does not support account linking.
+Currently, mainnet does not support account linking, therefore this app will not work on mainnet.
 
 ### Local Development
 
-Currently, Magic Link does not support local development.
-
-```
-
-```
+Currently, Magic Link does not support local development, therefore this app will not work locally.
