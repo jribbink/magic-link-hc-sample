@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev:testnet": "cross-env FLOW_NETWORK=testnet next dev",
-    "dev:testnet:deploy": "flow project deploy --network=testnet --update && npm run setup-admin:testnet && cross-env FLOW_NETWORK=testnet next dev",
-    "dev:testnet:update": "flow project deploy --network=testnet --update --show-diff && npm run setup-admin:testnet && cross-env FLOW_NETWORK=testnet next dev",
+    "dev:testnet:deploy": "npm run deploy:testnet && npm run dev:testnet",
+    "deploy:testnet": "flow project deploy --network=testnet --update && npm run setup-admin:testnet",
     "setup-admin:testnet": "flow transactions send ./cadence/transactions/factory/setup.cdc --network=testnet --signer=testnet-admin && flow transactions send ./cadence/transactions/filter/setup-allow-all.cdc --network=testnet --signer=testnet-admin",
     "test": "jest",
     "build": "next build",

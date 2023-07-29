@@ -33,16 +33,6 @@ Mainnet is not yet supported.
 
 Local development is not yet supported.
 
-### Configuring the CapabilityFactory and CapabilityFilter
-
-The `CapabilityFactory` and `CapabilityFilter` are used to configure what capabilities are available to the parent account. The default setup transactions for these exist at `cadence/transactions/factory/setup.cdc` and `cadence/transactions/filter/setup-allow-all.cdc`.
-
-To run these setup transactions, you can run:
-
-`npm run dev:testnet:setup-admin` (testnet)
-`npm run dev:mainnet:setup-admin` (mainnet)
-`npm run dev:local:setup-admin` (local)
-
 ## Running the App
 
 First run:
@@ -61,7 +51,7 @@ flow accounts create
 
 Follow the steps and select testnet. This will create a `[name].pkey` file (make sure this is gitignored) and add your account to flow.json.
 
-**NOTE:** The app looks for `mainnet-admin`/`testnet-admin`/`emulator-account` in `flow.json` to determine `CapabilityFilter` and `CapabilityFactory` configurations for HybridCustody. The name of the admin account is configured in `constants/index.ts`.
+**NOTE:** The app looks for an account named `mainnet-admin` (mainnet), `testnet-admin` (testnet), `emulator-account` (emulator) in `flow.json` to determine `CapabilityFilter` and `CapabilityFactory` configurations for HybridCustody. The name of the admin account is configured in `constants/index.ts`.
 
 Because of this, you should delete the existing admin account from `flow.json` and replace it with the account you just created. You can also change the name of the admin account in `constants/index.ts` if you want to use a different name.
 
@@ -71,10 +61,10 @@ Then run:
 npm run dev:testnet:deploy
 ```
 
-Whenever you need to redeploy changed contracts to Testnet while seeing the diff between deployed contracts and updates being pushed, you can run:
+To run the app subsequently without redeploying contracts, run:
 
 ```sh
-npm run dev:testnet:update
+npm run dev:testnet
 ```
 
 ### Mainnet
