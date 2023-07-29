@@ -10,6 +10,11 @@ if (flowNetwork === "mainnet") {
   apiKey = process.env.MAGIC_PUBLISHABLE_KEY_LOCAL;
 }
 
+if (!apiKey)
+  throw new Error(
+    "Magic API key not found, please set it in the environment variables"
+  );
+
 export const MAGIC_CONFIG = {
   apiKey: apiKey,
 };

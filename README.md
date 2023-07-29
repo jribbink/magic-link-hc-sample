@@ -27,21 +27,11 @@ MAGIC_SECRET_KEY_TESTNET=
 
 #### Mainnet Environment Variables
 
-You'll need to add the following environment variables to your `.env.local` file:
-
-```
-MAGIC_PUBLISHABLE_KEY_MAINNET=
-MAGIC_SECRET_KEY_MAINNET=
-```
+Mainnet is not yet supported.
 
 #### Local Development Environment Variables
 
-You'll need to add the following environment variables to your `.env.local` file:
-
-```
-MAGIC_PUBLISHABLE_KEY_LOCAL=
-MAGIC_SECRET_KEY_LOCAL=
-```
+Local development is not yet supported.
 
 ### Configuring the CapabilityFactory and CapabilityFilter
 
