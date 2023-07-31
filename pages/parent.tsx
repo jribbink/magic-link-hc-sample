@@ -7,7 +7,8 @@
   In reality, this would be done by either the wallet, an external marketplace,
   or some other dApp that the wallet would connect to.
 
-  It can be removed from the app by deleting this file
+  It can be removed from the app by deleting this file.  There are a lot of hacks
+  in this file to make it work, so it is not recommended to use this as a reference.
 */
 
 import { useEffect, useState } from "react";
@@ -27,37 +28,33 @@ function ParentPage() {
   const { nfts, mutate: mutateNFTs } = useChildNFTs(address);
 
   useEffect(() => {
-    const unsubscribe = (async function setup(): Promise<Function> {
-      // Hack to clear out the current user
-      delete (globalThis as any).FCL_REGISTRY.CURRENT_USER;
+    // Set up the FCL storage to use a different prefix to isolate the parent and child account views
+    const prefix = "fcl-parent-mode/";
+    fcl.config().put("fcl.storage", {
+      get: (key: string) =>
+        JSON.parse(sessionStorage.getItem(prefix + key) || "null"),
+      put: (key: string, value: any) =>
+        sessionStorage.setItem(prefix + key, JSON.stringify(value)),
+      can: () => window !== undefined,
+    });
 
-      // Set up the FCL storage to use a different prefix to isolate the parent and child account views
-      const prefix = "fcl-parent-mode/";
-      fcl.config().put("fcl.storage", {
-        get: (key: string) =>
-          JSON.parse(sessionStorage.getItem(prefix + key) || "null"),
-        put: (key: string, value: any) =>
-          sessionStorage.setItem(prefix + key, JSON.stringify(value)),
-        can: () => window !== undefined,
-      });
+    // Hack to clear out the current user
+    delete (globalThis as any).FCL_REGISTRY.CURRENT_USER;
 
-      // Make sure the currentUser is cleared out
-      await fcl.currentUser().snapshot();
-
-      // Subscribe to the currentUser to get the address
-      return fcl.currentUser().subscribe((user: CurrentUser) => {
-        if (user?.loggedIn) {
-          setAddress(user?.addr || null);
-        } else {
-          setAddress(null);
-        }
-      });
-    })();
+    // Subscribe to the currentUser to get the address
+    const unsubscribe = fcl.currentUser().subscribe((user: CurrentUser) => {
+      console.log(user);
+      if (user?.loggedIn) {
+        setAddress(user?.addr || null);
+      } else {
+        setAddress(null);
+      }
+    });
 
     return () => {
       fcl.config().delete("fcl.storage");
-      fcl.currentUser().snapshot();
-      unsubscribe.then((x) => x());
+      unsubscribe();
+      delete (globalThis as any).FCL_REGISTRY.CURRENT_USER;
     };
   }, []);
 
@@ -99,8 +96,6 @@ function ParentPage() {
         mutateNFTs();
       });
   }
-
-  console.log(nfts);
 
   return (
     <Flex flexDirection="column" gap={8}>
