@@ -15,7 +15,6 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import LinkedAccountsModal from "./LinkedAccountsModal";
-import { useBalance } from "../hooks/useBalance";
 import { useRouter } from "next/router";
 import * as fcl from "@onflow/fcl";
 import { CurrentUser } from "@onflow/typedefs";
@@ -32,7 +31,6 @@ export default function Navbar() {
   const parentMode = router.pathname === "/parent";
 
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
-  const { balance: parentBalance } = useBalance(currentUser?.addr);
 
   useEffect(() => {
     const unsub = fcl.currentUser().subscribe((user: CurrentUser) => {
@@ -108,7 +106,6 @@ export default function Navbar() {
               {currentUser?.addr}
             </MenuButton>
             <MenuList>
-              {parentBalance ? <MenuItem>{parentBalance} FLOW</MenuItem> : null}
               <MenuItem onClick={() => fcl.unauthenticate()}>Logout</MenuItem>
             </MenuList>
           </Menu>
