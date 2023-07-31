@@ -8,6 +8,10 @@ For more information regarding hybrid custody, see the [Flow documentation](http
 
 **NOTE:** Currently this app only works as is in **testnet**. It will not work in the emulator or on mainnet. This is because the Magic Link service is not yet available on the emulator and account linking is not yet available on mainnet.
 
+## See it in action
+
+You can see this app in action on [Code Sandbox](https://codesandbox.io/p/github/jribbink/magic-link-hc-sample/main).
+
 ## Getting Started
 
 ### Magic Link

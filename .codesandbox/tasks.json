@@ -9,48 +9,19 @@
 
   // These tasks can be run from CodeSandbox. Running one will open a log in the app.
   "tasks": {
+    // This task will run when you click "Start App" in the app.
+    // It contains a dummy key that you can use to test your app.
     "dev:testnet": {
-      "name": "dev:testnet",
-      "command": "npm run dev:testnet",
+      "name": "Start App",
+      "command": "MAGIC_PUBLISHABLE_KEY_TESTNET=pk_live_41A13A15F0792BBB npm run dev:testnet",
+      "env": {
+        "NODE_ENV": "development",
+        "REACT_APP_NETWORK": "testnet"
+      },
       "runAtStart": true,
       "preview": {
         "port": 3000
       }
-    },
-    "dev:testnet:deploy": {
-      "name": "dev:testnet:deploy",
-      "command": "npm run dev:testnet:deploy",
-      "runAtStart": false
-    },
-    "deploy:testnet": {
-      "name": "deploy:testnet",
-      "command": "npm run deploy:testnet",
-      "runAtStart": false
-    },
-    "setup-admin:testnet": {
-      "name": "setup-admin:testnet",
-      "command": "npm run setup-admin:testnet",
-      "runAtStart": false
-    },
-    "test": {
-      "name": "test",
-      "command": "npm run test",
-      "runAtStart": false
-    },
-    "build": {
-      "name": "build",
-      "command": "npm run build",
-      "runAtStart": false
-    },
-    "start": {
-      "name": "start",
-      "command": "npm run start",
-      "runAtStart": false
-    },
-    "lint": {
-      "name": "lint",
-      "command": "npm run lint",
-      "runAtStart": false
     }
   }
 }
