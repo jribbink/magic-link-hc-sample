@@ -1,6 +1,6 @@
 import * as fcl from "@onflow/fcl";
 import useSWR from "swr";
-import getParentsFromChild from "../cadence/scripts/hybrid-custody/get-parents-from-child.cdc";
+import getParentsFromChild from "../cadence/scripts/hybrid-custody/get_parents_from_child.cdc";
 import { useFlow } from "../contexts/FlowContext";
 
 export function useParentAccounts() {

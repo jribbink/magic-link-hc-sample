@@ -18,8 +18,11 @@ import { CurrentUser } from "@onflow/typedefs";
 import mintNFTCadence from "../cadence/transactions/example-nft/mint_nft.cdc";
 import destroyChildNFTCadence from "../cadence/transactions/example-nft/destroy_child_nft.cdc";
 import { Button, Flex, Heading, Spinner, Text } from "@chakra-ui/react";
+import { WarningIcon } from "@chakra-ui/icons";
+import { useRouter } from "next/router";
 
 function ParentPage() {
+  const router = useRouter();
   const [address, setAddress] = useState<string | null>(null);
   const { nfts, mutate: mutateNFTs } = useChildNFTs(address);
 
@@ -97,6 +100,8 @@ function ParentPage() {
       });
   }
 
+  console.log(nfts);
+
   return (
     <Flex flexDirection="column" gap={8}>
       <Heading>Parent Account (Wallet)</Heading>
@@ -110,15 +115,30 @@ function ParentPage() {
 
       {address ? (
         nfts ? (
-          Object.keys(nfts).map((childAddress) => (
-            <NFTGrid
-              key={childAddress}
-              headingText={`Child ${childAddress}`}
-              nfts={nfts[childAddress]}
-              onMintNFT={() => mintChildNFT(childAddress)}
-              onDestroyNFT={(id) => destroyChildNFT(childAddress, id)}
-            ></NFTGrid>
-          ))
+          Object.keys(nfts).length > 0 ? (
+            Object.keys(nfts).map((childAddress) => (
+              <NFTGrid
+                key={childAddress}
+                headingText={`Child ${childAddress}`}
+                nfts={nfts[childAddress]}
+                onMintNFT={() => mintChildNFT(childAddress)}
+                onDestroyNFT={(id) => destroyChildNFT(childAddress, id)}
+              ></NFTGrid>
+            ))
+          ) : (
+            <Text pt={4} fontWeight="bold">
+              <WarningIcon mr={2}></WarningIcon>
+              No child accounts exist yet, please return to{" "}
+              <Button
+                variant="link"
+                colorScheme="blue"
+                onClick={() => router.push("/")}
+              >
+                child mode
+              </Button>{" "}
+              to add this wallet to a child account
+            </Text>
+          )
         ) : (
           <Flex flexDir="column" alignItems="center">
             <Spinner size="lg"></Spinner>
