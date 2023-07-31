@@ -32,9 +32,9 @@ function ParentPage() {
     const prefix = "fcl-parent-mode/";
     fcl.config().put("fcl.storage", {
       get: (key: string) =>
-        JSON.parse(sessionStorage.getItem(prefix + key) || "null"),
+        JSON.parse(localStorage.getItem(prefix + key) || "null"),
       put: (key: string, value: any) =>
-        sessionStorage.setItem(prefix + key, JSON.stringify(value)),
+        localStorage.setItem(prefix + key, JSON.stringify(value)),
       can: () => window !== undefined,
     });
 
