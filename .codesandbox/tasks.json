@@ -14,10 +14,6 @@
     "dev:testnet": {
       "name": "Start App",
       "command": "MAGIC_PUBLISHABLE_KEY_TESTNET=pk_live_41A13A15F0792BBB npm run dev:testnet",
-      "env": {
-        "NODE_ENV": "development",
-        "REACT_APP_NETWORK": "testnet"
-      },
       "runAtStart": true,
       "preview": {
         "port": 3000

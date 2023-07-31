@@ -12,6 +12,8 @@ For more information regarding hybrid custody, see the [Flow documentation](http
 
 You can see this app in action on [Code Sandbox](https://codesandbox.io/p/github/jribbink/magic-link-hc-sample/main).
 
+**NOTE:** OAuth providers (Facebook, Google, etc.) will only work if you open the Code Sandbox preview in a new tab. This is due to limitations in the IFrame preview.
+
 ## Getting Started
 
 ### Magic Link
