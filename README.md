@@ -26,11 +26,10 @@ Currently Facebook & Google are listed as social providers in the dApp, (see `co
 
 #### Testnet Environment Variables
 
-You'll need to add the following environment variables to your `.env.local` file:
+You'll need to add the following environment variable to your `.env.local` file:
 
 ```
 MAGIC_PUBLISHABLE_KEY_TESTNET=
-MAGIC_SECRET_KEY_TESTNET=
 ```
 
 #### Mainnet Environment Variables
@@ -69,7 +68,7 @@ Then run:
 npm run dev:testnet:deploy
 ```
 
-To run the app subsequently without redeploying contracts, run:
+To run the app later without redeploying contracts, run:
 
 ```sh
 npm run dev:testnet
