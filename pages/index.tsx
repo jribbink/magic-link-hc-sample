@@ -93,7 +93,7 @@ export default function Home() {
             </Flex>
             <Flex justifyContent="center">
               <Button colorScheme="blue" size="lg" onClick={() => flow.login()}>
-                Sign in/Sign Up
+                Login/Signup
               </Button>
             </Flex>
           </Flex>
