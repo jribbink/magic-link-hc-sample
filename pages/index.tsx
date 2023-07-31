@@ -1,25 +1,20 @@
+/*
+
+This is the home page of the application. It will display the user's NFTs and allow them to mint and destroy NFTs.
+This page is used to demonstrate the CHILD ACCOUNT.  The parent account is used in the pages/parent.tsx file.
+
+*/
+
 import Head from "next/head";
 import { useFlow } from "../contexts/FlowContext";
-import {
-  Box,
-  Button,
-  Card,
-  CardHeader,
-  Flex,
-  Heading,
-  SimpleGrid,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Flex, Heading, Spinner, Text } from "@chakra-ui/react";
 import { useNFTs } from "../hooks/useNFTs";
 import NFTGrid from "../components/NFTGrid";
-import { useRouter } from "next/router";
 import mintNFTCadence from "../cadence/transactions/example-nft/mint_nft.cdc";
 import destroyNFTCadence from "../cadence/transactions/example-nft/destroy_nft.cdc";
 import * as fcl from "@onflow/fcl";
 
 export default function Home() {
-  const router = useRouter();
   const flow = useFlow();
   const { nfts, mutate: mutateNFTs } = useNFTs();
 

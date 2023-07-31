@@ -1,11 +1,10 @@
 /*
 *
 *  This is an example implementation of a Flow Non-Fungible Token
-*  It is not part of the official standard but it assumed to be
-*  similar to how many NFTs would implement the core functionality.
-*
-*  This contract does not implement any sophisticated classification
-*  system for its NFTs. It defines a simple NFT with minimal metadata.
+*  It has been modified to allow anyone to mint NFTs for the sake
+*  of this example. In a real world scenario, you would likely
+*  want to restrict the minting capability to a single account
+*  or a group of accounts.
 *
 */
 
