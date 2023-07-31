@@ -18,14 +18,14 @@ function NFTCard({ nft, onDestroyNft }: NFTCardProps) {
   }
 
   return (
-    <Card size="lg" height={300} display="flex" flexDir="column">
+    <Card size="lg" display="flex" flexDir="column">
       <Image
         roundedTop="lg"
         src={nft.thumbnail.url}
         alt={nft.name}
         width="100%"
       />
-      <Flex flexDir="column" padding="2" flex={1}>
+      <Flex flexDir="column" padding="2" height={110}>
         <Text fontWeight="bold">{nft.name}</Text>
         <Text>{nft.description}</Text>
 
