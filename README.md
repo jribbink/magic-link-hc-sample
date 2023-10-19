@@ -6,7 +6,7 @@ This repository is a fork of the [FCL Next Scaffold](https://github.com/chasefle
 
 For more information regarding hybrid custody, see the [Flow documentation](https://docs.onflow.org/concepts/hybrid-custody/). Additionally, this sample repository uses only a small subset of the available hybrid custody features. For more information on hybrid custody features as well as more sample scripts/transactions, see the [Hybrid Custody GitHub Repository](https://github.com/onflow/hybrid-custody/).
 
-**NOTE:** Currently this app only works as is in **testnet**. It will not work in the emulator or on mainnet. This is because the Magic Link service is not yet available on the emulator and account linking is not yet available on mainnet.
+**NOTE:** Currently this app only works as is in **testnet**.  Magic Link does not currently support mainnet.
 
 ## See it in action
 
