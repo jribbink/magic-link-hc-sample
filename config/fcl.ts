@@ -1,9 +1,10 @@
 import { config } from "@onflow/fcl";
 import { ACCESS_NODE_URLS } from "../constants";
 import flowJSON from "../flow.json";
-import { PHASE_PRODUCTION_BUILD } from "next/dist/shared/lib/constants";
 
 const flowNetwork = process.env.FLOW_NETWORK;
+
+if (!flowNetwork) throw new Error("FLOW_NETWORK not set");
 
 config({
   "flow.network": flowNetwork,
@@ -14,7 +15,4 @@ config({
   "app.detail.title": "FCL Next Scaffold",
 });
 
-// Load Flow JSON if not building (will throw during npm run build otherwise)
-if (process.env.NEXT_PHASE !== PHASE_PRODUCTION_BUILD) {
-  config.load(flowJSON);
-}
+config.load({ flowJSON });

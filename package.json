@@ -10,7 +10,8 @@
     "dev:mainnet:deploy": "npm run deploy:mainnet && npm run dev:mainnet",
     "deploy:mainnet": "flow project deploy --network=mainnet --update",
     "test": "jest",
-    "build": "next build",
+    "build:testnet": "cross-env FLOW_NETWORK=testnet next build",
+    "build:mainnet": "cross-env FLOW_NETWORK=mainnet next build",
     "start:testnet": "cross-env FLOW_NETWORK=testnet next start",
     "start:mainnet": "cross-env FLOW_NETWORK=mainnet next start",
     "lint": "next lint"

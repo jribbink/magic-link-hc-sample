@@ -35,6 +35,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-testnet-admin.key
-foob.pkey
-foob.pkey
+*.key
+*.pkey
+
+/.next-testnet/
+/.next-mainnet/
+/.next-local/

@@ -16,6 +16,7 @@ const nextConfig = {
     MAGIC_PUBLISHABLE_KEY_MAINNET: process.env.MAGIC_PUBLISHABLE_KEY_MAINNET,
     MAGIC_PUBLISHABLE_KEY_LOCAL: process.env.MAGIC_PUBLISHABLE_KEY_LOCAL,
   },
+  distDir: ".next-" + process.env.FLOW_NETWORK,
 };
 
 module.exports = nextConfig;
