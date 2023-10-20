@@ -6,7 +6,7 @@ This repository is a fork of the [FCL Next Scaffold](https://github.com/chasefle
 
 For more information regarding hybrid custody, see the [Flow documentation](https://docs.onflow.org/concepts/hybrid-custody/). Additionally, this sample repository uses only a small subset of the available hybrid custody features. For more information on hybrid custody features as well as more sample scripts/transactions, see the [Hybrid Custody GitHub Repository](https://github.com/onflow/hybrid-custody/).
 
-**NOTE:** Currently this app only works as is in **testnet**. Magic Link does not currently support mainnet.
+**NOTE:** Currently this app only works as is in **testnet** and **mainnet**. Magic Link does not currently support the emulator.
 
 ## See it in action
 
@@ -42,7 +42,7 @@ MAGIC_PUBLISHABLE_KEY_MAINNET=
 
 #### Local Development Environment Variables
 
-Local development is not yet supported.
+Currently, Magic Link does not support local development, therefore this app will not work locally.
 
 ## Running the App
 
