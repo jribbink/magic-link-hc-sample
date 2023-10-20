@@ -6,7 +6,7 @@ This repository is a fork of the [FCL Next Scaffold](https://github.com/chasefle
 
 For more information regarding hybrid custody, see the [Flow documentation](https://docs.onflow.org/concepts/hybrid-custody/). Additionally, this sample repository uses only a small subset of the available hybrid custody features. For more information on hybrid custody features as well as more sample scripts/transactions, see the [Hybrid Custody GitHub Repository](https://github.com/onflow/hybrid-custody/).
 
-**NOTE:** Currently this app only works as is in **testnet**.  Magic Link does not currently support mainnet.
+**NOTE:** Currently this app only works as is in **testnet**. Magic Link does not currently support mainnet.
 
 ## See it in action
 
@@ -34,7 +34,11 @@ MAGIC_PUBLISHABLE_KEY_TESTNET=
 
 #### Mainnet Environment Variables
 
-Mainnet is not yet supported.
+You'll need to add the following environment variable to your `.env.local` file:
+
+```
+MAGIC_PUBLISHABLE_KEY_MAINNET=
+```
 
 #### Local Development Environment Variables
 
@@ -50,33 +54,51 @@ npm install
 
 ### Testnet
 
-If you haven't yet created a testnet account, in the CLI run:
-
-```
-flow accounts create
-```
-
-Follow the steps and select testnet. This will create a `[name].pkey` file (make sure this is gitignored) and add your account to flow.json.
-
-**NOTE:** The app looks for an account named `mainnet-admin` (mainnet), `testnet-admin` (testnet), `emulator-account` (emulator) in `flow.json` to determine `CapabilityFilter` and `CapabilityFactory` configurations for HybridCustody. The name of the admin account is configured in `constants/index.ts`.
-
-Because of this, you should delete the existing admin account from `flow.json` and replace it with the account you just created. You can also change the name of the admin account in `constants/index.ts` if you want to use a different name.
-
-Then run:
-
-```sh
-npm run dev:testnet:deploy
-```
-
-To run the app later without redeploying contracts, run:
+To run the app without contracts, run:
 
 ```sh
 npm run dev:testnet
 ```
 
+However, in order to deploy your own contracts & make changes/additions to this app, you will need your own account in `flow.json`. There is currently an account in the `flow.json` file, `testnet-account`, which currently holds the `ExampleNFT.cdc` contract.
+
+To create your own account, delete the example account from the `flow.json` "accounts" section and run:
+
+```sh
+flow accounts create
+```
+
+Select the network `testnet` and call the account `testnet-account` so that it matches the "deployments" section in the `flow.json` file (however, it could be called anything as long as these match).
+
+To run the app and update the deployed contracts, run:
+
+```sh
+npm run dev:testnet:deploy
+```
+
 ### Mainnet
 
-Currently, mainnet does not support account linking, therefore this app will not work on mainnet.
+To run the app without contracts, run:
+
+```sh
+npm run dev:mainnet
+```
+
+However, in order to deploy your own contracts & make changes/additions to this app, you will need your own account in `flow.json`. There is currently an account in the `flow.json` file, `mainnet-account`, which currently holds the `ExampleNFT.cdc` contract.
+
+To create your own account, delete the example account from the `flow.json` "accounts" section and run:
+
+```sh
+flow accounts create
+```
+
+Select the network `mainnet` and call the account `mainnet-account` so that it matches the "deployments" section in the `flow.json` file (however, it could be called anything as long as these match).
+
+To run the app and update the deployed contracts, run:
+
+```sh
+npm run dev:mainnet:deploy
+```
 
 ### Local Development
 

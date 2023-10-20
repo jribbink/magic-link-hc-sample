@@ -15,7 +15,10 @@ import * as fcl from "@onflow/fcl";
 import setupMultiSig from "../cadence/transactions/hybrid-custody/setup-multi-sig.cdc";
 import removeParentFromChild from "../cadence/transactions/hybrid-custody/remove_parent_from_child.cdc";
 import { useState } from "react";
-import { ADMIN_ACCOUNT_ADDRESS } from "../config/admin-account";
+import {
+  CAPABILITY_FACTORY_ADDRESSES,
+  CAPABILITY_FILTER_ADDRESSES,
+} from "../constants";
 
 interface LinkedAccountsModalProps {
   isOpen: boolean;
@@ -43,6 +46,17 @@ export default function LinkedAccountsModal({
     const parentAuthz = fcl.currentUser().authorization;
     const childAuthz = flow.authz;
 
+    // Addresses of capability factories and capability filters.
+    // See https://github.com/onflow/hybrid-custody for more information.
+    const factoryAddress =
+      CAPABILITY_FACTORY_ADDRESSES[
+        process.env.FLOW_NETWORK as "testnet" | "mainnet"
+      ];
+    const filterAddress =
+      CAPABILITY_FILTER_ADDRESSES[
+        process.env.FLOW_NETWORK as "testnet" | "mainnet"
+      ];
+
     // This transaction will link the parent account to the child account
     // This uses the multi-sig approach in order to establish this link, however
     // this can be done in two steps if needed for your use case.
@@ -55,8 +69,8 @@ export default function LinkedAccountsModal({
         authorizations: [childAuthz, parentAuthz],
         args: (arg: any, t: any) => [
           arg(null, t.Optional(t.Address)),
-          arg(ADMIN_ACCOUNT_ADDRESS, t.Address),
-          arg(ADMIN_ACCOUNT_ADDRESS, t.Address),
+          arg(factoryAddress, t.Address),
+          arg(filterAddress, t.Address),
         ],
       } as any)
       .then((tx) => fcl.tx(tx).onceSealed())

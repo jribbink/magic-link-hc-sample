@@ -5,8 +5,10 @@
   "scripts": {
     "dev:testnet": "cross-env FLOW_NETWORK=testnet next dev",
     "dev:testnet:deploy": "npm run deploy:testnet && npm run dev:testnet",
-    "deploy:testnet": "flow project deploy --network=testnet --update && npm run setup-admin:testnet",
-    "setup-admin:testnet": "flow transactions send ./cadence/transactions/factory/setup.cdc --network=testnet --signer=testnet-admin && flow transactions send ./cadence/transactions/filter/setup-allow-all.cdc --network=testnet --signer=testnet-admin",
+    "deploy:testnet": "flow project deploy --network=testnet --update",
+    "dev:mainnet": "cross-env FLOW_NETWORK=mainnet next dev",
+    "dev:mainnet:deploy": "npm run deploy:mainnet && npm run dev:mainnet",
+    "deploy:mainnet": "flow project deploy --network=mainnet --update",
     "test": "jest",
     "build": "next build",
     "start": "next start",
