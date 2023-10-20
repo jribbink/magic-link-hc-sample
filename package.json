@@ -11,7 +11,8 @@
     "deploy:mainnet": "flow project deploy --network=mainnet --update",
     "test": "jest",
     "build": "next build",
-    "start": "next start",
+    "start:testnet": "cross-env FLOW_NETWORK=testnet next start",
+    "start:mainnet": "cross-env FLOW_NETWORK=mainnet next start",
     "lint": "next lint"
   },
   "dependencies": {

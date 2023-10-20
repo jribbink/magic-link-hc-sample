@@ -1,6 +1,7 @@
 import { config } from "@onflow/fcl";
 import { ACCESS_NODE_URLS } from "../constants";
 import flowJSON from "../flow.json";
+import { PHASE_PRODUCTION_BUILD } from "next/dist/shared/lib/constants";
 
 const flowNetwork = process.env.FLOW_NETWORK;
 
@@ -11,4 +12,9 @@ config({
   "discovery.wallet": `https://fcl-discovery.onflow.org/${flowNetwork}/authn`,
   "app.detail.icon": "https://avatars.githubusercontent.com/u/62387156?v=4",
   "app.detail.title": "FCL Next Scaffold",
-}).load({ flowJSON });
+});
+
+// Load Flow JSON if not building (will throw during npm run build otherwise)
+if (process.env.NEXT_PHASE !== PHASE_PRODUCTION_BUILD) {
+  config.load(flowJSON);
+}
